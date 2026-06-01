@@ -18,16 +18,16 @@ app.use("/api/watchlist", watchlistRouter);
 
 app.get("/api/health", (_, res) => res.json({ status: "ok", time: new Date().toISOString() }));
 
+// For Vercel (serverless), we export the app
 export default app;
 
-if (process.env.NODE_ENV !== "production") {
+// For Render/Railway/Local (persistent), we start the server
+if (!process.env.VERCEL) {
   app.listen(PORT, () => {
     console.log(`Stock Predictor API → http://localhost:${PORT}`);
     startScheduler();
   });
 } else {
-  // In Vercel (production), we still need to start the scheduler once
-  // Note: Vercel functions are short-lived, so this might not work as intended
-  // for a persistent daily scheduler. For a better solution, use Vercel Crons.
+  // Vercel serverless startup
   startScheduler();
 }
