@@ -1,0 +1,25 @@
+services:
+  # Backend API (Node.js Web Service)
+  - type: web
+    name: stock-predictor-api
+    env: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+
+  # Frontend (Static Site)
+  - type: web
+    name: stock-predictor-ui
+    env: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishDir: dist
+    envVars:
+      - key: VITE_API_BASE_URL
+        fromService:
+          name: stock-predictor-api
+          type: web
+          property: host
